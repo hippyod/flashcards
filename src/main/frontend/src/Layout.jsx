@@ -17,7 +17,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { withStyles } from '@material-ui/core/styles';
+import classnames from 'classnames';
+
+import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import FlashcardAppBar from './FlashcardAppBar';
 
@@ -29,6 +35,19 @@ const styles = theme => ({
         width: "100%",
         padding: "2px 7px 2px 0px",
         backgroundColor: '#eee',
+    },
+    icon: {
+       padding: 0,
+    },
+    expand: {
+        transform: 'rotate(0deg)',
+        marginLeft: 'auto',
+        transition: theme.transitions.create('transform', {
+            duration: theme.transitions.duration.shortest,
+        }),
+    },
+    expandOpen: {
+        transform: 'rotate(180deg)',
     },
 });
 
@@ -42,6 +61,11 @@ class Layout extends Component {
     }
 
     state = {
+        expanded: true,
+    };
+
+    handleExpandClick = () => {
+        this.setState(state => ({ expanded: !state.expanded }));
     };
 
     render() {
@@ -49,13 +73,33 @@ class Layout extends Component {
 
         return (
             <div>
-                <FlashcardAppBar title={this.props.title}/>
+                <FlashcardAppBar title={this.props.title} />
                 {this.props.children}
-                <br/>
+                <br />
                 <footer className={classes.footer}>
-                    <Typography variant="subtitle1" align="right" color="textSecondary" component="p" width="10">
-                        &#xa9;2019 Evan "Hippy" Slatis
-                    </Typography>
+                    <IconButton
+                        className={classnames(classes.expand, { [classes.expandOpen]: this.state.expanded, }, classes.icon)}
+                        onClick={this.handleExpandClick}
+                        aria-expanded={this.state.expanded}
+                        aria-label="Show more"
+                    >
+                        <ExpandMoreIcon />
+                        <Typography variant="body2" color="textSecondary" component="p" width="10">
+                            Copyright &#xa9;2019 Evan "Hippy" Slatis &#9679; hippyod - at - yahoo - dot - com
+                        </Typography>
+                    </IconButton>
+                    <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
+                        <Typography variant="caption" color="textSecondary" component="p" width="10">
+                            This is a non-commerical, learning demo application for use by anyone.
+                            No third party cookies or advertising is used on this site.
+                            <br/>
+                            The code is OSS under the Apache 2.0 license and found here: https://github.com/hippyod/flashcards<br/>
+                            No personal information whatsoever is collected or asked for.  Have fun.
+                            </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p" width="10">
+                            Copyright &#xa9;2019 Evan "Hippy" Slatis &#9679; hippyod - at - yahoo - dot - com
+                        </Typography>
+                    </Collapse>
                 </footer>
             </div>
         );
